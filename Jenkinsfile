@@ -1,25 +1,22 @@
 pipeline {
+    agent any
 
-  agent any
-  
-  stages{
-    stage("build"){
-      steps{
-        echo "building the application"
-      }
+    stages {
+        stage('Build') {
+            steps {
+                echo "Building the project"
+                sh 'javac HelloWorld.java'
+            }
+        }
+        stage('Run') {
+            steps {
+                echo "Running the project"
+                script {
+                    def output = sh(returnStdout: true, script: "java HelloWorld").trim()
+                    echo "${params.GREETING}"
+                    assert output == params.GREETING
+                }
+            }
+        }
     }
-    
-    stage("test"){
-      steps{
-        echo "testing the application"
-      }
-    }
-    
-    stage("deploy"){
-      steps{
-        echo "deploying the application"
-      }
-    }
-    
-  }
 }
